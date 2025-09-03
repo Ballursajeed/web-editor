@@ -1,0 +1,28 @@
+/* File.css */
+.file-container {
+  flex: 1;
+  background-color: #1e1e1e;
+  padding: 12px;
+  overflow: hidden;
+}
+
+.file-header {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #f3f3f3;
+}
+
+.file-editor {
+  border: 1px solid #333;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.no-file {
+  padding: 20px;
+  font-size: 14px;
+  width: 100%;
+  color: #aaa;
+  text-align: center;
+}
