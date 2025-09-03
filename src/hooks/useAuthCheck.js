@@ -7,7 +7,7 @@ export const useCheckAuth = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate();
-    const SERVER = 'http://localhost:3000';
+    const SERVER = 'https://web-editor-uoxj.onrender.com';
 
 
   const checkAuth = async(path) => {
