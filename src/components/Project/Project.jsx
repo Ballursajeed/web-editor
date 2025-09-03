@@ -12,7 +12,7 @@ const Project = () => {
 
   useEffect(() => {
       const fetchProject = async() => {
-        const res = await axios.get(`http://localhost:3000/file/project/get/${id}`,{
+        const res = await axios.get(`https://web-editor-uoxj.onrender.com/file/project/get/${id}`,{
           withCredentials: true
         });
         if(res.data.success){

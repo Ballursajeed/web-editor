@@ -23,7 +23,7 @@ const Home = () => {
       setLoading(true);
 
      try {
-      const res = await axios.post('http://localhost:3000/file/new',{
+      const res = await axios.post('https://web-editor-uoxj.onrender.com/file/new',{
          name
       },{
          withCredentials: true
@@ -63,7 +63,7 @@ const Home = () => {
 
     useEffect(() => {
      const fetchProjects = async() => {
-      const res = await axios.get('http://localhost:3000/file/project/user',{
+      const res = await axios.get('https://web-editor-uoxj.onrender.com/file/project/user',{
         withCredentials: true
       });
       if(res.data.success){

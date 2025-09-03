@@ -14,7 +14,7 @@ export default function Explorer({ name, projectId, onFileSelect }) {
   useEffect(() => {
     const fetchTree = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/file/tree/${projectId}`,{
+        const res = await axios.get(`https://web-editor-uoxj.onrender.com/file/tree/${projectId}`,{
           withCredentials: true
         });
         setTree(res.data.tree);
@@ -40,7 +40,7 @@ export default function Explorer({ name, projectId, onFileSelect }) {
   };
 
   const handleFormSubmit = async() => {
-    const res = await axios.post('http://localhost:3000/file/add',{
+    const res = await axios.post('https://web-editor-uoxj.onrender.com/file/add',{
       name:formName,projectId,type, parentId:null
     },{
          withCredentials: true
@@ -120,7 +120,7 @@ function TreeView({ nodes, onFileSelect }) {
   };
 
   const handleFormSubmit = async() => {
-    const res = await axios.post('http://localhost:3000/file/add',{
+    const res = await axios.post('https://web-editor-uoxj.onrender.com/file/add',{
       name:formName,projectId:id,type, parentId:parentIdState
     },{
          withCredentials: true

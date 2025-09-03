@@ -14,7 +14,7 @@ const File = ({ fileId }) => {
   useEffect(() => {
     if (!fileId) return; // No file selected yet
     const fetchFile = async () => {
-      const res = await axios.get(`http://localhost:3000/file/get/${fileId}`,{
+      const res = await axios.get(`https://web-editor-uoxj.onrender.com/file/get/${fileId}`,{
         withCredentials: true
       });
       setCode(res.data.file.content);
@@ -32,7 +32,7 @@ const File = ({ fileId }) => {
   const handleSave = async () => {
     if (!fileId) return;
    try {
-    const res = await axios.put(`http://localhost:3000/file/save/${fileId}`, { content: code },{
+    const res = await axios.put(`https://web-editor-uoxj.onrender.com/file/save/${fileId}`, { content: code },{
           withCredentials: true
        });
        if(res.data.success){
