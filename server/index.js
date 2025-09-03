@@ -11,7 +11,7 @@ const PORT = 3000 || process.env.PORT;
 
 app.use(express.json());
 app.use(cors({
-    origin: ['https://e-commerce-app-six-plum.vercel.app',"http://localhost:5173"],
+    origin: ['https://web-editor-one.vercel.app',"http://localhost:5173"],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
