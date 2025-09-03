@@ -60,14 +60,14 @@ export const newProject = async(req,res) => {
         
         const { name } = req.body;
 
-        const sameName = await Project.findOne({name});
+        const sameName = await Project.findOne({ name, owner: req.user._id });
 
-        if(sameName && sameName.owner === req.user){
-          return res.status(400).json({
-            message: "Project with this name already exists",
-            success: false
-          })
-        }
+    if (sameName) {
+      return res.status(400).json({
+        message: "You already have a project with this name",
+        success: false,
+      });
+    }
         
         const project = await Project.create({
             name,
