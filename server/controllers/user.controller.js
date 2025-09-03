@@ -140,7 +140,7 @@ export const userLogout = async(req,res) => {
     })
     } catch (error) {
          return res.status(500).json({
-                message: "Something went wrong,while logging out user",
+                message: "Something went wrong,please try again later",
                 success: false,
                 error,
             });
