@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./Explorer.css";
 import { useParams } from "react-router";
+import { useSelector } from "react-redux";
 
 export default function Explorer({ name, projectId, onFileSelect }) {
   const [tree, setTree] = useState([]);
@@ -10,6 +11,9 @@ export default function Explorer({ name, projectId, onFileSelect }) {
   const [showCreateForm,setShowCreateForm] = useState(false);
   const [type,setType] = useState('');
   const [formName,setFormName] = useState('');
+
+    const user = useSelector((state) => state.auth.user);
+
 
   useEffect(() => {
     const fetchTree = async () => {
@@ -85,6 +89,16 @@ export default function Explorer({ name, projectId, onFileSelect }) {
           </>
         )
       }
+
+      <div className="exl-profile">
+  <div className="exl-profile-avatar">
+    {user.username?.charAt(0).toUpperCase()}
+  </div>
+  <div className="exl-profile-info">
+    <span className="exl-profile-name">{user.username}</span>
+    <span className="exl-profile-role">Logged in</span>
+  </div>
+</div>
     </div>
   );
 }

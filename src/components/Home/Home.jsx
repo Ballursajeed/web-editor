@@ -80,7 +80,8 @@ const Home = () => {
         {/* Sidebar */}
         <aside className="sidebar">
           <h3>Your Projects</h3>
-          {projects.length === 0 ? (
+          <div className="projects">
+            {projects.length === 0 ? (
             <p>No projects yet.</p>
           ) : (
             <ul>
@@ -95,6 +96,17 @@ const Home = () => {
               ))}
             </ul>
           )}
+          </div>
+        
+        <div className="profile">
+  <div className="profile-avatar">
+    {user.username?.charAt(0).toUpperCase()}
+  </div>
+  <div className="profile-info">
+    <span className="profile-name">{user.username}</span>
+    <span className="profile-role">Logged in</span>
+  </div>
+</div>
         </aside>
 
         {/* Main content */}
