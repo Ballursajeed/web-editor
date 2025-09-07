@@ -7,15 +7,19 @@ import cookieParser from "cookie-parser"
 dotenv.config();
 
 const app = express();
-const PORT = 3000 || process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors({
-    origin: ['https://web-editor-one.vercel.app',"http://localhost:5174"],
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-}))
+  origin: [
+    "https://web-editor-one.vercel.app", // your deployed frontend
+    "http://localhost:5173",            // vite default
+    "http://localhost:5174"             // fallback
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 app.use(cookieParser());
 
 connectDB();
