@@ -91,6 +91,42 @@ export const newProject = async(req,res) => {
     }
 }
 
+export const updateProject = async(req,res) => {
+  try {
+    
+    const { name } = req.body;
+    const { id } = req.params;
+
+    const sameName = await Project.findOne({ name, owner: req.user._id });
+
+    if (sameName) {
+      return res.status(400).json({
+        message: "You already have a project with this name",
+        success: false,
+      });
+    }
+
+    const project = await Project.findById(id);
+
+    if(name) project.name = name;
+
+    await project.save();
+
+    res.status(200).json({
+            message: "Project updated Successfully!",
+            success: true,
+            project
+        })
+
+  } catch (error) {
+     return res.status(500).json({
+            message: "Something went wrong!",
+            success: false,
+             error: error.message
+        })
+  }
+}
+
 export const saveFile = async(req,res) => {
     try {
         const {name, content} = req.body;
@@ -288,3 +324,33 @@ export const deleteFile = async (req, res) => {
     });
   }
 };
+
+export const deleteProject = async(req,res) => {
+  try {
+    
+    const { id } = req.params;
+
+    const project = await Project.findById(id);
+
+    if(!project){
+      return res.status(400).json({
+        message: "Project not found!",
+        success: false
+      })
+    }
+
+    await Project.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      message: "Project is deleted Successfully!",
+      success: true
+    })
+
+  } catch (error) {
+      return res.status(500).json({
+      message: "Something went wrong!",
+      success: false,
+      error: error.message,
+    });
+  }
+}

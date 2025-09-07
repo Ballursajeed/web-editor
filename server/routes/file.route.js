@@ -1,5 +1,17 @@
 import express from "express";
-import { createFileOrFolder, deleteFile, getAllProjects, getFile, getProject, getProjectByUser, getTree, newProject, saveFile } from "../controllers/file.controller.js";
+import { 
+         createFileOrFolder, 
+         deleteFile, 
+         deleteProject, 
+         getAllProjects, 
+         getFile, 
+         getProject, 
+         getProjectByUser, 
+         getTree, 
+         newProject, 
+         saveFile, 
+         updateProject 
+        } from "../controllers/file.controller.js";
 import { validateUser } from "../middlewares/user.middleware.js";
 
 const route = express();
@@ -15,6 +27,9 @@ route.route('/add').post(validateUser,createFileOrFolder);
 route.route('/new').post(validateUser,newProject);
 
 route.route('/save/:id').put(validateUser,saveFile);
+route.route('/project/:id').put(validateUser,updateProject);
+
 route.route('/delete/:id').delete(validateUser,deleteFile);
+route.route('/project/:id').delete(validateUser,deleteProject);
 
 export default route;
