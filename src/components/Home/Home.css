@@ -32,12 +32,43 @@
   border-radius: 3px;
   cursor: pointer;
   transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* name left, buttons right */
 }
 
-.project-item:hover {
-  background: #2a2d2e;
+
+.modify {
+  display: none;
+  gap: 8px;
+  align-items: center;
 }
 
+.project-item:hover .modify {
+  display: flex;
+}
+
+.icon-btn {
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.edit-icon {
+  color: #4cafef;
+}
+
+.edit-icon:hover {
+  color: #70c0ff;
+}
+
+.delete-icon {
+  color: #f44336;
+}
+
+.delete-icon:hover {
+  color: #ff6b6b;
+}
 /* Main Content */
 .main-content {
   flex: 1;

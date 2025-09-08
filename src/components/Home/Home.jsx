@@ -7,6 +7,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import { useSelector } from 'react-redux';
 import Loading from '../Loader/Loader.jsx';
+import { FiEdit2, FiTrash2 } from "react-icons/fi"; 
+
 
 const Home = () => {
 
@@ -61,6 +63,47 @@ const Home = () => {
        }
    }
 
+   const handleDelete = async (id) => {
+    
+  try {
+    const res = await axios.delete(
+      `https://web-editor-uoxj.onrender.com/file/project/${id}`,
+      { withCredentials: true }
+    );
+    console.log(res);
+    
+    if (res.data.success) {
+      toast.success("Project deleted!", { autoClose: 1000 });
+      setProjects(projects.filter((p) => p._id !== id));
+    }
+  } catch (err) {
+    toast.error(err?.response?.data?.message || "Delete failed!");
+  }
+};
+
+const handleUpdate = async (id) => {
+  const newName = prompt("Enter new project name:");
+  if (!newName) return;
+
+  try {
+    const res = await axios.put(
+      `https://web-editor-uoxj.onrender.com/file/project/${id}`,
+      { name: newName },
+      { withCredentials: true }
+    );
+    if (res.data.success) {
+      toast.success("Project updated!", { autoClose: 1000 });
+      setProjects(
+        projects.map((p) =>
+          p._id === id ? { ...p, name: newName } : p
+        )
+      );
+    }
+  } catch (err) {
+    toast.error(err?.response?.data?.message || "Update failed!");
+  }
+};
+
     useEffect(() => {
      const fetchProjects = async() => {
       const res = await axios.get('https://web-editor-uoxj.onrender.com/file/project/user',{
@@ -84,17 +127,34 @@ const Home = () => {
             {projects.length === 0 ? (
             <p>No projects yet.</p>
           ) : (
-            <ul>
-              {projects.map((project) => (
-                <li
-                  key={project._id}
-                  onClick={() => navigate(`/project/${project._id}`)}
-                  className="project-item"
-                >
-                  {project.name}
-                </li>
-              ))}
-            </ul>
+       <ul>
+  {projects.map((project) => (
+    <li key={project._id} className="project-item" onClick={() => navigate(`/project/${project._id}`)}>
+      <span >
+        {project.name}
+      </span>
+      <div className="modify">
+        <FiEdit2
+          className="icon-btn edit-icon"
+          onClick={(e) => { 
+            e.stopPropagation();
+            handleUpdate(project._id)}
+        }
+          title="Edit Project"
+        />
+        <FiTrash2
+          className="icon-btn delete-icon"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDelete(project._id)
+          }
+        }
+          title="Delete Project"
+        />
+      </div>
+    </li>
+  ))}
+</ul>
           )}
           </div>
         
