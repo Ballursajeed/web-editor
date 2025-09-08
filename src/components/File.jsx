@@ -37,7 +37,7 @@ const File = ({ fileId }) => {
       setCode(res.data.file.content);
 
       const ext = file.name.split(".").pop();
-    setLanguage(extensionToLang[ext] || "plaintext");
+      setLanguage(extensionToLang[ext] || "plaintext");
     };
     fetchFile();
   }, [fileId]);
