@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import MonacoEditor from "react-monaco-editor";
+import Editor from "@monaco-editor/react";
 import axios from "axios";
 import "./File.css";
 import { ToastContainer, toast } from 'react-toastify';
@@ -7,10 +7,22 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useCheckAuth } from "../hooks/useAuthCheck";
 
 const File = ({ fileId }) => {
-  const [code, setCode] = useState("");
+    const [code, setCode] = useState("");
+    const [language, setLanguage] = useState("plaintext");
+
     const checkAuth = useCheckAuth();
 
     const SERVER = 'https://web-editor-uoxj.onrender.com';
+    const extensionToLang = {
+      js: "javascript",
+      ts: "typescript",
+      py: "python",
+      json: "json",
+      html: "html",
+      css: "css",
+      cpp: "cpp",
+      java: "java",
+    };
   
 
   useEffect(() => {
@@ -19,7 +31,13 @@ const File = ({ fileId }) => {
       const res = await axios.get(`${SERVER}/file/get/${fileId}`,{
         withCredentials: true
       });
+      console.log(res);
+      
+       const file = res.data.file;
       setCode(res.data.file.content);
+
+      const ext = file.name.split(".").pop();
+    setLanguage(extensionToLang[ext] || "plaintext");
     };
     fetchFile();
   }, [fileId]);
@@ -116,10 +134,11 @@ const File = ({ fileId }) => {
   return (
     <div className="file-container">
       <h1 className="file-header">Monaco Editor</h1>
-      <MonacoEditor
-        height="800"
+      <Editor
+        key={language}
+        height="800px"
         className={'file-editor'}
-        language="javascript"
+        language={language}
         theme="vs-dark"
         value={code}
         onChange={(newValue) => setCode(newValue)}

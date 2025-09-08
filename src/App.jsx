@@ -16,10 +16,6 @@ const App = () => {
       <Route path="/project/:id" element={<Project />} />
      </Routes>
     </Router>
-    // <div className="app-container">
-    //   <Explorer projectId={projectId} onFileSelect={setSelectedFile} />
-    //   <File fileId={selectedFile} />
-    // </div>
   );
 };
 
