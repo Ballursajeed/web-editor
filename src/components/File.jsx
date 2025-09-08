@@ -125,6 +125,7 @@ const File = ({ fileId }) => {
         onChange={(newValue) => setCode(newValue)}
       />
       <div className="buttons">
+        <button className="save-btn" onClick={handleSave}>save</button>
         <button onClick={handleDelete}>delete</button>
       </div>
      <ToastContainer />

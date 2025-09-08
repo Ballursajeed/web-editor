@@ -15,6 +15,7 @@
 
 .buttons{
   display: flex;
+  gap: 5px;
   justify-content: end;
 }
 
@@ -33,6 +34,10 @@
   
   .buttons > button:hover {
     background-color: #b71c1c;
+  }
+
+  .buttons > .save-btn{
+    background-color: #d56f22;
   }
 
 .file-editor {
