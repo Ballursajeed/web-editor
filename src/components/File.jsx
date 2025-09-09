@@ -8,6 +8,7 @@ import { useCheckAuth } from "../hooks/useAuthCheck";
 
 const File = ({ fileId }) => {
     const [code, setCode] = useState("");
+    const [fileName,setFileName] = useState('');
     const [language, setLanguage] = useState("plaintext");
 
     const checkAuth = useCheckAuth();
@@ -35,6 +36,7 @@ const File = ({ fileId }) => {
       
        const file = res.data.file;
       setCode(res.data.file.content);
+      setFileName(res.data.file.name);
 
       const ext = file.name.split(".").pop();
       setLanguage(extensionToLang[ext] || "plaintext");
@@ -133,7 +135,7 @@ const File = ({ fileId }) => {
 
   return (
     <div className="file-container">
-      <h1 className="file-header">Monaco Editor</h1>
+      <h1 className="file-header">{fileName}</h1>
       <Editor
         key={language}
         height="800px"

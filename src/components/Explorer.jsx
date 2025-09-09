@@ -21,7 +21,7 @@ export default function Explorer({ name, projectId, onFileSelect }) {
 
     function getFileIcon(fileName) {
   const ext = fileName.split(".").pop();
-  return extensionToIcon[ext] || "📄"; // fallback icon
+  return extensionToIcon[ext] || "📄"; 
 }
 
 
@@ -121,17 +121,17 @@ function TreeView({ nodes, onFileSelect }) {
   const [type,setType] = useState('');
   const [formName,setFormName] = useState('');
   const [parentIdState,setParentIdState] = useState('');
-  
+
 const extensionToIcon = {
-  js: <DiJavascript1 color="#f7df1e" />,   // JS
-  ts: <SiTypescript color="#3178c6" />,    // TS
-  py: <DiPython color="#3776ab" />,        // Python
-  json: <VscJson color="#cb3837" />,       // JSON
-  html: <DiHtml5 color="#e34c26" />,       // HTML
-  css: <DiCss3 color="#264de4" />,         // CSS
-  java: <DiJava color="#f89820" />,        // Java
-  cpp: <SiCplusplus color="#00599c" />,    // C++
-  c: <SiC color="#A8B9CC" />,              // C
+  js: <DiJavascript1 color="#f7df1e" />,   
+  ts: <SiTypescript color="#3178c6" />,    
+  py: <DiPython color="#3776ab" />,        
+  json: <VscJson color="#cb3837" />,       
+  html: <DiHtml5 color="#e34c26" />,      
+  css: <DiCss3 color="#264de4" />,         
+  java: <DiJava color="#f89820" />,        
+  cpp: <SiCplusplus color="#00599c" />,    
+  c: <SiC color="#A8B9CC" />,              
 };
 
   const { id } = useParams();
