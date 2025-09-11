@@ -8,7 +8,7 @@ import { SiTypescript, SiC, SiCplusplus } from "react-icons/si";
 import { VscJson } from "react-icons/vsc";
 import { SERVER } from "../constants";
 
-export default function Explorer({ name, projectId, onFileSelect }) {
+export default function Explorer({ name, projectId, onFileSelect, onFilesSelect, selectedFiles }) {
   const [tree, setTree] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
@@ -65,7 +65,7 @@ export default function Explorer({ name, projectId, onFileSelect }) {
         <button className="plus-btn" onClick={handleCreateButton}>+</button>
       </h2>
 
-      <TreeView nodes={tree} onFileSelect={onFileSelect} />
+      <TreeView nodes={tree} onFileSelect={onFileSelect} onFilesSelect={onFilesSelect} selectedFiles={selectedFiles}/>
 
       {showMenu && (
         <div
@@ -106,7 +106,7 @@ export default function Explorer({ name, projectId, onFileSelect }) {
   );
 }
 
-function TreeView({ nodes, onFileSelect }) {
+function TreeView({ nodes, onFileSelect, onFilesSelect, selectedFiles }) {
   const [openFolders, setOpenFolders] = useState({});
   const [showMenu, setShowMenu] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
@@ -179,7 +179,18 @@ const extensionToIcon = {
           ) : (
             <div
               className="tree-row"
-              onClick={() => onFileSelect(node._id)}
+              onClick={() => 
+              {
+                onFileSelect(node._id);
+                const existedFileId = selectedFiles.find((ele)=> ele._id === node._id);
+                if(!existedFileId){
+                 onFilesSelect([...selectedFiles,{
+                  _id:node._id,
+                  name: node.name
+                 }]);
+                }
+              }
+              }
             >
               <span className="icon">{getFileIcon(node.name)}</span>
               <span className="label">{node.name}</span>
@@ -214,7 +225,7 @@ const extensionToIcon = {
           {node.type === "folder" &&
             openFolders[node._id] &&
             node.children?.length > 0 && (
-              <TreeView nodes={node.children} onFileSelect={onFileSelect} />
+              <TreeView nodes={node.children} onFileSelect={onFileSelect} onFilesSelect={onFilesSelect} selectedFiles={selectedFiles}/>
             )}
         </li>
       ))}

@@ -8,6 +8,10 @@
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.right-container{
+  width: 100%;
+}
+
 .app-container > * {
   border-right: 1px solid #333;
 }

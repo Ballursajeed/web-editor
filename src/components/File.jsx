@@ -6,7 +6,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import { useCheckAuth } from "../hooks/useAuthCheck";
 import { SERVER } from "../constants";
+import SelectedFiles from "./selectedFiles/SelectedFiles";
 
+      
 const File = ({ fileId }) => {
     const [code, setCode] = useState("");
     const [fileName,setFileName] = useState('');
@@ -24,22 +26,22 @@ const File = ({ fileId }) => {
       cpp: "cpp",
       java: "java",
     };
-  
 
   useEffect(() => {
-    if (!fileId) return; // No file selected yet
+    if (!fileId) return; 
     const fetchFile = async () => {
       const res = await axios.get(`${SERVER}/file/get/${fileId}`,{
         withCredentials: true
       });
-      console.log(res);
       
-       const file = res.data.file;
+      const file = res.data.file;
+
       setCode(res.data.file.content);
       setFileName(res.data.file.name);
 
       const ext = file.name.split(".").pop();
       setLanguage(extensionToLang[ext] || "plaintext");
+
     };
     fetchFile();
   }, [fileId]);
@@ -63,9 +65,7 @@ const File = ({ fileId }) => {
                   closeOnClick: true,
                   pauseOnHover: true,
                   draggable: true,
-                  onClose: () => {  
-                    window.location.reload();
-                }
+                
               })
        }
    } catch (error) {
@@ -135,7 +135,6 @@ const File = ({ fileId }) => {
 
   return (
     <div className="file-container">
-      <h1 className="file-header">{fileName}</h1>
       <Editor
         key={language}
         height="800px"

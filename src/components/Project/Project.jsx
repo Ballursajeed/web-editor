@@ -4,10 +4,12 @@ import Explorer from '../Explorer';
 import File from '../File';
 import axios from 'axios';
 import { SERVER } from '../../constants';
+import SelectedFiles from '../selectedFiles/SelectedFiles';
 
 const Project = () => {
 
   const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFiles,setSelectedFiles] = useState([]);
   const [name,setName] = useState('');
   const { id } = useParams(); 
 
@@ -21,12 +23,23 @@ const Project = () => {
         }
       }
       fetchProject();
-  },[])
+  },[]);
+
+  
 
   return (
    <div className="app-container">
-      <Explorer name={name} projectId={id} onFileSelect={setSelectedFile} />
-      <File fileId={selectedFile} />
+      <Explorer name={name} 
+      projectId={id} 
+      onFileSelect={setSelectedFile} 
+      onFilesSelect={setSelectedFiles}
+      selectedFiles={selectedFiles}
+      />
+
+      <div className='right-container'>
+        <SelectedFiles selectedFiles={selectedFiles} onFilesSelect={setSelectedFiles}  onFileSelect={setSelectedFile} />
+        <File fileId={selectedFile} />
+      </div>
      </div>
   )
 }
