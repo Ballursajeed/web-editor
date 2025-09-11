@@ -5,6 +5,7 @@ import "./File.css";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import { useCheckAuth } from "../hooks/useAuthCheck";
+import { SERVER } from "../constants";
 
 const File = ({ fileId }) => {
     const [code, setCode] = useState("");
@@ -13,7 +14,6 @@ const File = ({ fileId }) => {
 
     const checkAuth = useCheckAuth();
 
-    const SERVER = 'https://web-editor-uoxj.onrender.com';
     const extensionToLang = {
       js: "javascript",
       ts: "typescript",

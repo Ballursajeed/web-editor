@@ -8,6 +8,7 @@ import '../Register/Register.css'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import Loading from '../Loader/Loader.jsx';
+import { SERVER } from '../../constants.js';
 
 const Login = () => {
 
@@ -19,8 +20,6 @@ const Login = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     
-    const SERVER = 'https://web-editor-uoxj.onrender.com';
-
     const submitHandler = async(e) => {
         dispatch(loginStart())
         e.preventDefault()

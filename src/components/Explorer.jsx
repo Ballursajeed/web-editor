@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { DiJavascript1, DiPython, DiHtml5, DiCss3, DiJava } from "react-icons/di";
 import { SiTypescript, SiC, SiCplusplus } from "react-icons/si";
 import { VscJson } from "react-icons/vsc";
+import { SERVER } from "../constants";
 
 export default function Explorer({ name, projectId, onFileSelect }) {
   const [tree, setTree] = useState([]);
@@ -15,20 +16,12 @@ export default function Explorer({ name, projectId, onFileSelect }) {
   const [type,setType] = useState('');
   const [formName,setFormName] = useState('');
 
-  
-
-    const user = useSelector((state) => state.auth.user);
-
-    function getFileIcon(fileName) {
-  const ext = fileName.split(".").pop();
-  return extensionToIcon[ext] || "📄"; 
-}
-
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     const fetchTree = async () => {
       try {
-        const res = await axios.get(`https://web-editor-uoxj.onrender.com/file/tree/${projectId}`,{
+        const res = await axios.get(`${SERVER}/file/tree/${projectId}`,{
           withCredentials: true
         });
         setTree(res.data.tree);
@@ -54,7 +47,7 @@ export default function Explorer({ name, projectId, onFileSelect }) {
   };
 
   const handleFormSubmit = async() => {
-    const res = await axios.post('https://web-editor-uoxj.onrender.com/file/add',{
+    const res = await axios.post(`${SERVER}/file/add`,{
       name:formName,projectId,type, parentId:null
     },{
          withCredentials: true
@@ -142,17 +135,8 @@ const extensionToIcon = {
 
     function getFileIcon(fileName) {
   const ext = fileName.split(".").pop();
-  return extensionToIcon[ext] || "📄"; // fallback icon
+  return extensionToIcon[ext] || "📄";
 }
-
-
-  
-  const handleCreateButton = (e) => {
-    e.stopPropagation();
-    const rect = e.target.getBoundingClientRect();
-    setMenuPosition({ x: rect.left, y: rect.bottom });
-    setShowMenu(!showMenu);
-  };
 
   const handleOptionClick = (type) => {
     setShowMenu(false);
@@ -162,7 +146,7 @@ const extensionToIcon = {
   };
 
   const handleFormSubmit = async() => {
-    const res = await axios.post('https://web-editor-uoxj.onrender.com/file/add',{
+    const res = await axios.post(`${SERVER}/file/add`,{
       name:formName,projectId:id,type, parentId:parentIdState
     },{
          withCredentials: true
@@ -187,7 +171,7 @@ const extensionToIcon = {
               <span className="label">{node.name} <button className="plus-btn" onClick={(e) => {
                  e.stopPropagation();
                 const rect = e.target.getBoundingClientRect();
-                setMenuPosition({ x: rect.left, y: rect.bottom });
+                setMenuPosition({ x: rect.left, y: rect.bottom }); //for new file or new folder UI position
                 setShowMenu(!showMenu);
                 setParentIdState(node._id);
               }}>+</button></span>

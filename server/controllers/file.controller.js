@@ -32,6 +32,10 @@ export const createFileOrFolder = async (req, res) => {
   }
 }
 
+if(type === 'file'){
+  
+}
+
     const newItem = await File.create({
       name,
       type,

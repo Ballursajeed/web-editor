@@ -2,13 +2,12 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../auth/authSlice.js";
 import { useNavigate } from "react-router-dom";
+import { SERVER } from "../constants.js";
 
 export const useCheckAuth = () => {
 
   const dispatch = useDispatch()
   const navigate = useNavigate();
-    const SERVER = 'https://web-editor-uoxj.onrender.com';
-
 
   const checkAuth = async(path) => {
 

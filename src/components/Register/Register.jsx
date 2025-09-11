@@ -1,6 +1,5 @@
-import  { FormEvent, useState } from 'react';
-import axios, { AxiosError } from 'axios';
-// import {SERVER} from "../../constants.js"
+import  { useState } from 'react';
+import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginStart,loginSuccess } from '../../auth/authSlice.js';
@@ -8,6 +7,7 @@ import './Register.css'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import Loading from '../Loader/Loader.jsx';
+import { SERVER } from '../../constants.js';
 
 const Register = () => {
 
@@ -15,14 +15,11 @@ const Register = () => {
     const [email, setEmail] = useState('')
     const [fullName, setFullname] = useState('')
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);  // Add loading state
+    const [loading, setLoading] = useState(false);  
 
 
     const dispatch = useDispatch()
     const navigate = useNavigate();
-    const SERVER = 'https://web-editor-uoxj.onrender.com';
-
-
 
     const hangleSubmit = async(e) => {
       e.preventDefault()
@@ -52,8 +49,8 @@ const Register = () => {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          onClose: async () => {  // Ensure navigation happens after toast closes
-            // Login request after registration
+          onClose: async () => {  
+           
             const loginRes = await axios.post(`${SERVER}/user/login`, {
                 username,
                 password
@@ -66,7 +63,7 @@ const Register = () => {
                      token: loginRes.data.accessToken
               }));
 
-              navigate("/");  // Navigate after successful login
+              navigate("/");  
             }
         }
       })
@@ -89,7 +86,7 @@ const Register = () => {
           }
         );
        }finally {
-        setLoading(false);  // Stop loading after the process completes
+        setLoading(false); 
        }
 
     }

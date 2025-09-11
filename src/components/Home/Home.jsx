@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useSelector } from 'react-redux';
 import Loading from '../Loader/Loader.jsx';
 import { FiEdit2, FiTrash2 } from "react-icons/fi"; 
+import { SERVER } from '../../constants.js';
 
 
 const Home = () => {
@@ -25,7 +26,7 @@ const Home = () => {
       setLoading(true);
 
      try {
-      const res = await axios.post('https://web-editor-uoxj.onrender.com/file/new',{
+      const res = await axios.post(`${SERVER}/file/new`,{
          name
       },{
          withCredentials: true
@@ -67,7 +68,7 @@ const Home = () => {
     
   try {
     const res = await axios.delete(
-      `https://web-editor-uoxj.onrender.com/file/project/${id}`,
+      `${SERVER}/file/project/${id}`,
       { withCredentials: true }
     );
     console.log(res);
@@ -87,7 +88,7 @@ const handleUpdate = async (id) => {
 
   try {
     const res = await axios.put(
-      `https://web-editor-uoxj.onrender.com/file/project/${id}`,
+      `${SERVER}/file/project/${id}`,
       { name: newName },
       { withCredentials: true }
     );
@@ -106,7 +107,7 @@ const handleUpdate = async (id) => {
 
     useEffect(() => {
      const fetchProjects = async() => {
-      const res = await axios.get('https://web-editor-uoxj.onrender.com/file/project/user',{
+      const res = await axios.get(`${SERVER}/file/project/user`,{
         withCredentials: true
       });
       if(res.data.success){
