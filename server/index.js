@@ -12,9 +12,9 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cors({
   origin: [
-    "https://web-editor-one.vercel.app", // your deployed frontend
-    "http://localhost:5173",            // vite default
-    "http://localhost:5174"             // fallback
+    "https://web-editor-one.vercel.app",
+    "http://localhost:5173",            
+    "http://localhost:5174"             
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],

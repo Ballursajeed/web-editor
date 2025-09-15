@@ -25,6 +25,7 @@ route.route('/project/user').get(validateUser,getProjectByUser);
 
 route.route('/add').post(validateUser,createFileOrFolder);
 route.route('/new').post(validateUser,newProject);
+route.route('/project/newCollaborator/:id').post(validateUser,newProject);
 
 route.route('/save/:id').put(validateUser,saveFile);
 route.route('/project/:id').put(validateUser,updateProject);

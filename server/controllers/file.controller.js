@@ -1,5 +1,6 @@
 import { File } from "../models/file.model.js";
 import { Project } from "../models/project.model.js";
+import { User } from "../models/user.model.js";
 import { buildTree, deleteFileRecursively } from "../utities/helperFunctio.js";
 
 export const createFileOrFolder = async (req, res) => {
@@ -94,6 +95,60 @@ export const newProject = async(req,res) => {
         })
     }
 }
+
+export const newCollaborator = async (req, res) => {
+  try {
+    
+    const { id } = req.params;
+    const userId = req.user; 
+    
+    if (!userId) {
+      return res.status(401).json({
+        message: "Not Authenticated!",
+        success: false
+      });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found!",
+        success: false
+      });
+    }
+
+    const project = await Project.findById(id);
+    if (!project) {
+      return res.status(404).json({
+        message: "Project not found!",
+        success: false
+      });
+    }
+
+    if (project.collaborators.includes(user._id)) {
+      return res.status(400).json({
+        message: "User is already a collaborator!",
+        success: false
+      });
+    }
+
+    project.collaborators.push(user._id);
+    await project.save();
+
+    return res.status(200).json({
+      message: "Collaborator added successfully!",
+      success: true,
+      project
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: "Something went wrong!",
+      success: false,
+      error: error.message
+    });
+  }
+};
 
 export const updateProject = async(req,res) => {
   try {
@@ -220,11 +275,9 @@ export const getAllProjects = async(req,res) => {
 }
 
 export const getProjectByUser = async(req,res) => {
-    console.log("id:",req.user)
 
   try {
     
-
     const projects = await Project.find({ owner: req.user });
 
    if(projects.length == 0){
