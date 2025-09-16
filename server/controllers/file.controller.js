@@ -364,7 +364,7 @@ export const getColloboratedProject = async(req,res) => {
     const user = await User.findById(userId);
 
     if(!user){
-      return res.status(400).json({
+      return res.status(404).json({
         message: "User not found!",
         success: false
       })
@@ -373,21 +373,21 @@ export const getColloboratedProject = async(req,res) => {
     const project = await Project.findById(id);
 
     if(!project){
-      return res.status(400).json({
+      return res.status(404).json({
         message:"Project not Found!",
         success: false
       })
     }
 
-    const collaborators = project.collaborators;
+     const isCollaborator = project.collaborators.some((collabId) =>
+      collabId.equals(user._id)
+    );
 
-    const existedUser = collaborators.find((u) => String(u) === String(user._id));
-
-    if(!existedUser){
-      return res.status(400).json({
-        message:"You're not authorized!",
+    if (!isCollaborator) {
+      return res.status(403).json({
+        message: "You're not authorized to access this project!",
         success: false
-      })
+      });
     }
 
     return res.status(200).json({
