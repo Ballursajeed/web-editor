@@ -391,7 +391,7 @@ export const getColloboratedProject = async(req,res) => {
     }
 
     return res.status(200).json({
-      message:"Project shared Successfully!",
+      message:"Project retrieved successfully!",
       success: true,
       project
     })
