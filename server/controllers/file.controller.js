@@ -355,6 +355,57 @@ export const getTree = async(req,res) => {
     }
 }
 
+export const getColloboratedProject = async(req,res) => {
+  try {
+
+    const { id } = req.params;
+    const userId = req.user;
+
+    const user = await User.findById(userId);
+
+    if(!user){
+      return res.status(400).json({
+        message: "User not found!",
+        success: false
+      })
+    }
+
+    const project = await Project.findById(id);
+
+    if(!project){
+      return res.status(400).json({
+        message:"Project not Found!",
+        success: false
+      })
+    }
+
+    const collaborators = project.collaborators;
+
+    const existedUser = collaborators.find((u) => String(u) === String(user._id));
+
+    if(!existedUser){
+      return res.status(400).json({
+        message:"You're not authorized!",
+        success: false
+      })
+    }
+
+    return res.status(200).json({
+      message:"Project shared Successfully!",
+      success: true,
+      project
+    })
+
+
+  } catch (error) {
+     return res.status(500).json({
+      message: "Something went wrong!",
+      success: false,
+      error: error.message,
+    });
+  }
+}
+
 export const deleteFile = async (req, res) => {
   try {
     const { id } = req.params;
