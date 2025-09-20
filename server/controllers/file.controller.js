@@ -119,6 +119,13 @@ export const createSession = async(req,res) => {
       })
     }
 
+    if (String(project.owner) !== String(req.user._id)) {
+      return res.status(403).json({
+        message: "Only the project owner can create sessions",
+        success: false
+      });
+    }
+
     const newSession = await CollabeSession.create({
         session: uuidv4(),
         admin: req.user,
@@ -131,7 +138,7 @@ export const createSession = async(req,res) => {
       message:"session URL is created",
       success: true,
       session: newSession,
-      url:`http://localhost:5173/collabe/${newSession.session}`
+      url:`http://localhost:5173/project/collabe/${newSession.session}`
     })
 
   } catch (error) {
@@ -346,6 +353,61 @@ export const getTree = async(req,res) => {
             error: error.message
         })
     }
+}
+
+export const getCollabeProject = async(req,res) => {
+  try {
+    
+    const { session } = req.params;
+
+    if(!session){
+      return res.status(400).json({
+        message: "Session Id is required!",
+        success: false
+      })
+    }
+
+    const collabeSession = await CollabeSession.findOne({session});
+
+    if(!collabeSession){
+      return res.status(404).json({
+        message:"session not found!",
+        success: false
+      })
+    }
+
+    if(!(collabeSession.expiry.getTime() > Date.now())){
+      await CollabeSession.deleteOne({ _id: collabeSession._id });
+        return res.status(400).json({
+          message: "Session is expired!, sorry",
+          success: false
+        })   
+    }
+
+    const projectId = collabeSession.project;
+
+    const project = await Project.findById(projectId);
+
+    if(!project){
+      return res.status(404).json({
+        message: "Project Not found!",
+        success: false
+      })
+    }
+
+    return res.status(200).json({
+      message: "Project Shared SuccessFully!",
+      success: true,
+      project
+    })
+
+  } catch (error) {
+    return res.status(500).json({
+      message:"Something went wrong!",
+      success: false,
+      error: error.message
+    })
+  }
 }
 
 export const deleteFile = async (req, res) => {
