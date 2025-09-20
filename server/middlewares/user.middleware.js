@@ -7,9 +7,6 @@ export const validateUser = async(req,res,next) => {
  try {
        const token = req.cookies.accessToken || req.header("Authorization")?.replace("Bearer ","");
        
-       console.log(token);
-       
-   
        if (!token) {
            return res.status(400).json({
                message:"Please Login first!",
