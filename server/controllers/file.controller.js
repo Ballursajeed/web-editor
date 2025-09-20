@@ -395,6 +395,9 @@ export const getCollabeProject = async(req,res) => {
       })
     }
 
+    await project.collaborators.push(req.user);
+    project.save();
+
     return res.status(200).json({
       message: "Project Shared SuccessFully!",
       success: true,
