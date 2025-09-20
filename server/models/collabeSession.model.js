@@ -18,7 +18,7 @@ const collabeSessionSchema = new mongoose.Schema(
         },
         role:{
             type: String,
-            enum:['editor','reader','admin'],
+            enum:['editor','viewer'],
             required:true
         },
         expiry:{
