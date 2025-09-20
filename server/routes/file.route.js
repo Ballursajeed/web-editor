@@ -1,6 +1,7 @@
 import express from "express";
 import { 
          createFileOrFolder, 
+         createSession, 
          deleteFile, 
          deleteProject, 
          getAllProjects, 
@@ -25,6 +26,7 @@ route.route('/project/user').get(validateUser,getProjectByUser);
 
 route.route('/add').post(validateUser,createFileOrFolder);
 route.route('/new').post(validateUser,newProject);
+route.route('/project/createSession').post(validateUser,createSession);
 
 route.route('/save/:id').put(validateUser,saveFile);
 route.route('/project/:id').put(validateUser,updateProject);

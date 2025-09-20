@@ -1,7 +1,9 @@
+import { CollabeSession } from "../models/collabeSession.model.js";
 import { File } from "../models/file.model.js";
 import { Project } from "../models/project.model.js";
 import { User } from "../models/user.model.js";
 import { buildTree, deleteFileRecursively } from "../utities/helperFunctio.js";
+import { v4 as uuidv4 } from 'uuid';
 
 export const createFileOrFolder = async (req, res) => {
   try {
@@ -94,6 +96,51 @@ export const newProject = async(req,res) => {
             error
         })
     }
+}
+
+export const createSession = async(req,res) => {
+  try {
+    
+    const { projectId,role } = req.body;
+    
+    if(!projectId || !role){
+      return res.status(400).json({
+        message:"All fields are required!",
+        success: false
+      })
+    }
+
+    const project = await Project.findById(projectId);
+
+    if(!project){
+      return res.status(404).json({
+        message: "Poject not Found!",
+        success: false
+      })
+    }
+
+    const newSession = await CollabeSession.create({
+        session: uuidv4(),
+        admin: req.user,
+        project: projectId,
+        role,
+        expiry: new Date(Date.now() + 24 * 60 * 60 * 1000) 
+    });
+
+    return res.status(201).json({
+      message:"session URL is created",
+      success: true,
+      session: newSession,
+      url:`http://localhost:5173/collabe/${newSession.session}`
+    })
+
+  } catch (error) {
+    return res.status(500).json({
+      message:"Something went Wrong!",
+      success: false,
+      error: error.message
+    })
+  }
 }
 
 export const updateProject = async(req,res) => {
