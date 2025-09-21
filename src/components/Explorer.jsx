@@ -57,15 +57,20 @@ export default function Explorer({ name, projectId, onFileSelect, onFilesSelect,
       window.location.reload();
     }
   }
-
-  return (
-    <div className="explorer">
+return (
+  <div className="explorer">
+    <div className="explorer-content">
       <h2 className="explorer-title">
         {name}
         <button className="plus-btn" onClick={handleCreateButton}>+</button>
       </h2>
 
-      <TreeView nodes={tree} onFileSelect={onFileSelect} onFilesSelect={onFilesSelect} selectedFiles={selectedFiles}/>
+      <TreeView 
+        nodes={tree}
+        onFileSelect={onFileSelect}
+        onFilesSelect={onFilesSelect}
+        selectedFiles={selectedFiles}
+      />
 
       {showMenu && (
         <div
@@ -80,30 +85,38 @@ export default function Explorer({ name, projectId, onFileSelect, onFilesSelect,
           </div>
         </div>
       )}
-      {
-        showCreateForm && (
-          <>
-           <div className="context-menu"
-           style={{ top: menuPosition.y, left: menuPosition.x }}>
-            <label htmlFor="create-form">Name</label>
-            <input style={{ width:"90%" }} value={formName} onChange={(e) => setFormName(e.target.value)}  type="text" id="create-form" />
-            <button onClick={handleFormSubmit}>submit</button>
-           </div>
-          </>
-        )
-      }
 
-      <div className="exl-profile">
-  <div className="exl-profile-avatar">
-    {user.username?.charAt(0).toUpperCase()}
-  </div>
-  <div className="exl-profile-info">
-    <span className="exl-profile-name">{user.username}</span>
-    <span className="exl-profile-role">Logged in</span>
-  </div>
-</div>
+      {showCreateForm && (
+        <div className="context-menu" style={{ top: menuPosition.y, left: menuPosition.x }}>
+          <label htmlFor="create-form">Name</label>
+          <input
+            style={{ width: "90%" }}
+            value={formName}
+            onChange={(e) => setFormName(e.target.value)}
+            type="text"
+            id="create-form"
+          />
+          <button onClick={handleFormSubmit}>submit</button>
+        </div>
+      )}
     </div>
-  );
+
+    {/* Fixed bottom area */}
+    <div className="live-share">
+      <button>Collabe</button>
+    </div>
+
+    <div className="exl-profile">
+      <div className="exl-profile-avatar">
+        {user.username?.charAt(0).toUpperCase()}
+      </div>
+      <div className="exl-profile-info">
+        <span className="exl-profile-name">{user.username}</span>
+        <span className="exl-profile-role">Logged in</span>
+      </div>
+    </div>
+  </div>
+);
 }
 
 function TreeView({ nodes, onFileSelect, onFilesSelect, selectedFiles }) {

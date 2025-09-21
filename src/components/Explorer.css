@@ -5,7 +5,16 @@
   padding: 5px;
   position: relative;
   width: 220px;
+  height: 100vh; /* full height for sidebar */
+  display: flex;
+  flex-direction: column;
 }
+
+.explorer-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
 
 .explorer-title {
   display: flex;
@@ -75,10 +84,6 @@
 }
 
 .exl-profile {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 85%; /* same as sidebar width */
   background: #1e1e1e;
   border-top: 1px solid #3c3c3c;
   padding: 0.75rem 1rem;
@@ -120,4 +125,26 @@
 .exl-profile-role {
   font-size: 12px;
   color: #9a9a9a;
+}
+
+.live-share {
+  background: #252526;
+  border-top: 1px solid #3c3c3c;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.live-share button {
+  background: #0e639c;
+  border: none;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.live-share button:hover {
+  background: #1177bb;
 }
