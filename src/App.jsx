@@ -4,6 +4,7 @@ import Home from "./components/Home/Home";
 import Project from "./components/Project/Project";
 import Register from './components/Register/Register';
 import Login from './components/Login/Login';
+import { ToastContainer, toast } from 'react-toastify';
 import Collabe from './components/Collabe/Collabe';
 
 const App = () => {
@@ -17,6 +18,18 @@ const App = () => {
       <Route path="/project/:id" element={<Project />} />
       <Route path="/project/collabe/:session" element={<Collabe />} />
      </Routes>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </Router>
   );
 };
