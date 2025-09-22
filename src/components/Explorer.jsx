@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./Explorer.css";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { useSelector } from "react-redux";
 import { DiJavascript1, DiPython, DiHtml5, DiCss3, DiJava } from "react-icons/di";
 import { SiTypescript, SiC, SiCplusplus } from "react-icons/si";
@@ -14,6 +14,7 @@ export default function Explorer({ name, projectId, onFileSelect, onFilesSelect,
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [showCreateForm,setShowCreateForm] = useState(false);
   const [showCollabe,setShowCollabe] = useState(false);
+  const [showSession,setShowSession] = useState(false);
   const [type,setType] = useState('');
   const [formName,setFormName] = useState('');
   const [sessionUrl,setSessionUrl] = useState('');
@@ -73,6 +74,7 @@ export default function Explorer({ name, projectId, onFileSelect, onFilesSelect,
         });
 
         setSessionUrl(res.data.url);
+        setShowSession(true)
         console.log(res.data);
         
 
@@ -125,22 +127,29 @@ return (
       )}
     </div>
 
-    {/* Fixed bottom area */}
     <div className="live-share">
-      <button onClick={handleCollabe}>Collabe</button>
-      {
-        showCollabe && (
-          <>
-           <div className="share">
-            <span>Start collaborate with others</span>
-            <button onClick={() => handleLiveShare('viewer')} className="read-only">Share(Read/Write)</button>
-            <button onClick={() => handleLiveShare('editor')} className="read-write">Share(Read-only)</button>
-            <button className="join">Join</button>
-           </div>
-          </>
-        )
-      }
+  <button onClick={handleCollabe}>Collabe</button>
+
+  {showCollabe && (
+    <div className="share">
+      <span>Start collaborating with others</span>
+      <button onClick={() => handleLiveShare("viewer")} className="read-only">
+        Share (Read-only)
+      </button>
+      <button onClick={() => handleLiveShare("editor")} className="read-write">
+        Share (Read/Write)
+      </button>
+      <button className="join">Join</button>
+
+      {showSession && (
+        <div className="invite-link">
+          <strong>Invite Link:</strong>
+          <Link to={sessionUrl}>{sessionUrl}</Link>
+        </div>
+      )}
     </div>
+  )}
+</div>
 
     <div className="exl-profile">
       <div className="exl-profile-avatar">

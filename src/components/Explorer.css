@@ -126,16 +126,16 @@
   font-size: 12px;
   color: #9a9a9a;
 }
-
 .live-share {
   background: #252526;
   border-top: 1px solid #3c3c3c;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.live-share button {
+.live-share > button {
   background: #0e639c;
   border: none;
   color: #fff;
@@ -143,8 +143,76 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 13px;
+  width: 100%;
+  text-align: center;
 }
 
-.live-share button:hover {
+.live-share > button:hover {
   background: #1177bb;
+}
+
+/* Expanded share panel */
+.share {
+  background: #1e1e1e;
+  border: 1px solid #3c3c3c;
+  border-radius: 4px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 13px;
+  color: #ccc;
+}
+
+.share span {
+  font-size: 12px;
+  margin-bottom: 4px;
+  color: #9a9a9a;
+}
+
+.share button {
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  width: 100%;
+}
+
+.share button.read-only {
+  background: #0e639c;
+  color: #fff;
+}
+
+.share button.read-only:hover {
+  background: #1177bb;
+}
+
+.share button.read-write {
+  background: #16825d;
+  color: #fff;
+}
+
+.share button.read-write:hover {
+  background: #1a9c6d;
+}
+
+.share button.join {
+  background: #444;
+  color: #fff;
+}
+
+.share button.join:hover {
+  background: #555;
+}
+
+.invite-link {
+  margin-top: 0.5rem;
+  padding: 6px;
+  background: #2a2a2a;
+  border-radius: 4px;
+  word-break: break-all;
+  font-size: 12px;
+  color: #ccc;
+  border: 1px solid #3c3c3c;
 }
