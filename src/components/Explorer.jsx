@@ -13,6 +13,7 @@ export default function Explorer({ name, projectId, onFileSelect, onFilesSelect,
   const [showMenu, setShowMenu] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [showCreateForm,setShowCreateForm] = useState(false);
+  const [showCollabe,setShowCollabe] = useState(false);
   const [type,setType] = useState('');
   const [formName,setFormName] = useState('');
 
@@ -57,6 +58,11 @@ export default function Explorer({ name, projectId, onFileSelect, onFilesSelect,
       window.location.reload();
     }
   }
+
+  const handleCollabe = async() => {
+       setShowCollabe(!showCollabe);
+  }
+
 return (
   <div className="explorer">
     <div className="explorer-content">
@@ -103,7 +109,19 @@ return (
 
     {/* Fixed bottom area */}
     <div className="live-share">
-      <button>Collabe</button>
+      <button onClick={handleCollabe}>Collabe</button>
+      {
+        showCollabe && (
+          <>
+           <div className="share">
+            <span>Start collaborate with others</span>
+            <button className="read-only">Share(Read/Write)</button>
+            <button className="read-write">Share(Read-only)</button>
+            <button className="join">Join</button>
+           </div>
+          </>
+        )
+      }
     </div>
 
     <div className="exl-profile">

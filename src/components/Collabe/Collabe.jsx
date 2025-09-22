@@ -25,8 +25,6 @@ const Collabe = () => {
       fetchProject();
   },[]);
 
-  
-
   return (
    <div className="app-container">
       <Explorer name={name} 
