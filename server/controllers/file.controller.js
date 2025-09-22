@@ -139,7 +139,7 @@ export const createSession = async(req,res) => {
         message:"Session is already available",
         success: true,
         existingSession,
-        url:`http://localhost:5173/project/collabe/${existingSession.session}`
+        url:`${process.env.CLIENT}/project/collabe/${existingSession.session}`
       })
     }
 
@@ -155,7 +155,7 @@ export const createSession = async(req,res) => {
       message:"session URL is created",
       success: true,
       session: newSession,
-      url:`http://localhost:5173/project/collabe/${newSession.session}`
+      url:`${process.env.CLIENT}/project/collabe/${newSession.session}`
     })
 
   } catch (error) {
