@@ -137,6 +137,7 @@ export const createSession = async(req,res) => {
 
       return res.status(200).json({
         message:"Session is already available",
+        success: true,
         existingSession,
         url:`http://localhost:5173/project/collabe/${existingSession.session}`
       })
