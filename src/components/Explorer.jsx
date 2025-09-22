@@ -16,6 +16,7 @@ export default function Explorer({ name, projectId, onFileSelect, onFilesSelect,
   const [showCollabe,setShowCollabe] = useState(false);
   const [type,setType] = useState('');
   const [formName,setFormName] = useState('');
+  const [sessionUrl,setSessionUrl] = useState('');
 
   const user = useSelector((state) => state.auth.user);
 
@@ -61,6 +62,23 @@ export default function Explorer({ name, projectId, onFileSelect, onFilesSelect,
 
   const handleCollabe = async() => {
        setShowCollabe(!showCollabe);
+  }
+
+  const handleLiveShare = async(role) => {
+      try {
+        const res = await axios.post(`${SERVER}/file/project/createSession`,{
+          projectId,role
+        },{
+          withCredentials:true
+        });
+
+        setSessionUrl(res.data.url);
+        console.log(res.data);
+        
+
+      } catch (error) {
+        console.log('error:',error);
+      }
   }
 
 return (
@@ -115,8 +133,8 @@ return (
           <>
            <div className="share">
             <span>Start collaborate with others</span>
-            <button className="read-only">Share(Read/Write)</button>
-            <button className="read-write">Share(Read-only)</button>
+            <button onClick={() => handleLiveShare('viewer')} className="read-only">Share(Read/Write)</button>
+            <button onClick={() => handleLiveShare('editor')} className="read-write">Share(Read-only)</button>
             <button className="join">Join</button>
            </div>
           </>

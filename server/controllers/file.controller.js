@@ -126,6 +126,16 @@ export const createSession = async(req,res) => {
       });
     }
 
+    const existingSession = await CollabeSession.findOne({project:projectId});
+
+    if(existingSession){
+      return res.status(200).json({
+        message:"Session is already available",
+        existingSession,
+        url:`http://localhost:5173/project/collabe/${existingSession.session}`
+      })
+    }
+
     const newSession = await CollabeSession.create({
         session: uuidv4(),
         admin: req.user,
