@@ -7,6 +7,8 @@ import { DiJavascript1, DiPython, DiHtml5, DiCss3, DiJava } from "react-icons/di
 import { SiTypescript, SiC, SiCplusplus } from "react-icons/si";
 import { VscJson } from "react-icons/vsc";
 import { SERVER } from "../constants";
+import { toast } from 'react-toastify';
+
 
 export default function Explorer({ name, projectId, onFileSelect, onFilesSelect, selectedFiles }) {
   const [tree, setTree] = useState([]);
@@ -72,14 +74,33 @@ export default function Explorer({ name, projectId, onFileSelect, onFilesSelect,
         },{
           withCredentials:true
         });
-
-        setSessionUrl(res.data.url);
-        setShowSession(true)
-        console.log(res.data);
         
+         if(res.data.success){
+          setSessionUrl(res.data.url);
+          setShowSession(true);
+          navigator.clipboard.writeText(sessionUrl);
+          toast.success('Invite link is copied to your clickboard!', {
+              position: "top-center",
+              autoClose: 1000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+          })
+       }
 
       } catch (error) {
-        console.log('error:',error);
+         toast.error(
+              `${error?.response?.data?.message || "Something went wrong!"}`,
+              {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+              }
+            );
       }
   }
 
@@ -287,6 +308,7 @@ const extensionToIcon = {
             )}
         </li>
       ))}
+
     </ul>
   );
 }
