@@ -129,6 +129,12 @@ export const createSession = async(req,res) => {
     const existingSession = await CollabeSession.findOne({project:projectId});
 
     if(existingSession){
+
+      if(String(existingSession.role) !== String(role)){
+        existingSession.role = role;
+        await existingSession.save();
+      }
+
       return res.status(200).json({
         message:"Session is already available",
         existingSession,
