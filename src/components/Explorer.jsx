@@ -78,7 +78,7 @@ export default function Explorer({ name, projectId, onFileSelect, onFilesSelect,
          if(res.data.success){
           setSessionUrl(res.data.url);
           setShowSession(true);
-          navigator.clipboard.writeText(sessionUrl);
+          navigator.clipboard.writeText(res.data.url);
           toast.success('Invite link is copied to your clickboard!', {
               position: "top-center",
               autoClose: 1000,
