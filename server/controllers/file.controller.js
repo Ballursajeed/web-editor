@@ -135,6 +135,9 @@ export const createSession = async(req,res) => {
         await existingSession.save();
       }
 
+      existingSession.expiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      await existingSession.save();
+
       return res.status(200).json({
         message:"Session is already available",
         success: true,
