@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import { connectDB } from "./db/db.js";
 import cors from "cors";
 import cookieParser from "cookie-parser"
+import { Server}  from 'socket.io';
+import { createServer } from "http"; 
 
 dotenv.config();
 
@@ -30,6 +32,30 @@ import userRouter from "./routes/user.routes.js"
 app.use("/file",fileRouter);
 app.use("/user",userRouter);
 
-app.listen(PORT,() => {
+const httpServer = createServer(app);
+
+const io = new Server(httpServer,{
+  cors: {
+    origin: [
+      "https://web-editor-one.vercel.app",
+      "http://localhost:5173",
+      "http://localhost:5174"
+    ],
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
+
+io.on("connection",(socket) => {
+
+  console.log('new client is connected',socket.id);
+
+  socket.on('disconnect',() => {
+    console.log('Client is disconnected!',socket.id);
+  })
+
+})
+
+httpServer.listen(PORT,() => {
     console.log("Server is running on PORT: ",PORT);
 });
