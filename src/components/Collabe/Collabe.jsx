@@ -5,6 +5,7 @@ import File from '../File';
 import axios from 'axios';
 import { SERVER } from '../../constants';
 import SelectedFiles from '../selectedFiles/SelectedFiles';
+import { io } from 'socket.io-client';
 
 const Collabe = () => {
 
@@ -26,6 +27,22 @@ const Collabe = () => {
       }
       fetchProject();
   },[]);
+
+  useEffect(() => {
+
+    const socket = io(SERVER,{
+     withCredentials: true
+    });
+
+    socket.on('connect',() => {
+          console.log("user is connected: ",socket.id);
+    });
+
+    socket.on("disconnect",() => {
+      console.log("client is disconnected!",socket.id);
+    })
+
+  },[session])
 
   return (
    <div className="app-container">
