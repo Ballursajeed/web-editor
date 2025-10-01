@@ -31,11 +31,12 @@ const Collabe = () => {
   useEffect(() => {
 
     const socket = io(SERVER,{
-     withCredentials: true
+      withCredentials: true
     });
 
     socket.on('connect',() => {
-          console.log("user is connected: ",socket.id);
+        console.log("user is connected: ",socket.id);
+        socket.emit('join-session',{sessionId: session})
     });
 
     socket.on("disconnect",() => {
