@@ -9,7 +9,7 @@ import { SERVER } from "../constants";
 import SelectedFiles from "./selectedFiles/SelectedFiles";
 
       
-const File = ({ fileId }) => {
+const File = ({ fileId,role }) => {
     const [code, setCode] = useState("");
     const [fileName,setFileName] = useState('');
     const [language, setLanguage] = useState("plaintext");
@@ -119,6 +119,10 @@ const File = ({ fileId }) => {
        }
   }
 
+  const onChangeHandler = (newValue) => {
+       setCode(newValue)
+  }
+
   // Ctrl+S listener
   useEffect(() => {
     const handleKey = (e) => {
@@ -142,11 +146,21 @@ const File = ({ fileId }) => {
         language={language}
         theme="vs-dark"
         value={code}
-        onChange={(newValue) => setCode(newValue)}
+        onChange={role === 'editor' ? onChangeHandler : null}
+        options={{
+    readOnly: role === "viewer",   
+    minimap: { enabled: false },  
+  }}
       />
       <div className="buttons">
-        <button className="save-btn" onClick={handleSave}>save</button>
-        <button onClick={handleDelete}>delete</button>
+        <button className="save-btn" 
+         onClick={handleSave}
+         disabled={role === "viewer"}
+        >save</button>
+        <button 
+         onClick={handleDelete}
+         disabled={role === "viewer"} 
+         >delete</button>
       </div>
      <ToastContainer />
 

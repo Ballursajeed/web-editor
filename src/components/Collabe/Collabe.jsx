@@ -11,8 +11,10 @@ const Collabe = () => {
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFiles,setSelectedFiles] = useState([]);
+
   const [name,setName] = useState('');
   const [id,setId] = useState('');
+  const [role,setRole] = useState('editor')
   const { session } = useParams(); 
 
   useEffect(() => {
@@ -23,6 +25,7 @@ const Collabe = () => {
         if(res.data.success){
             setName(res.data.project.name);
             setId(res.data.project._id);
+            setRole(res.data.role);
         }
       }
       fetchProject();
@@ -62,7 +65,7 @@ const Collabe = () => {
 
       <div className='right-container'>
         <SelectedFiles selectedFiles={selectedFiles} onFilesSelect={setSelectedFiles}  onFileSelect={setSelectedFile} />
-        <File fileId={selectedFile} />
+        <File role={role} fileId={selectedFile} />
       </div>
      </div>
   )
