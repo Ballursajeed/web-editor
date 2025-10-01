@@ -422,6 +422,7 @@ if (!project.collaborators.includes(req.user._id)) {
     return res.status(200).json({
       message: "Project Shared SuccessFully!",
       success: true,
+      role:collabeSession.role,
       project
     })
 
