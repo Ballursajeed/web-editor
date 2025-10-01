@@ -42,6 +42,10 @@ const Collabe = () => {
       console.log("client is disconnected!",socket.id);
     })
 
+    return () => {
+    socket.disconnect();
+  };
+
   },[session])
 
   return (
