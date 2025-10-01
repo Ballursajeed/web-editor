@@ -50,6 +50,11 @@ io.on("connection",(socket) => {
 
   console.log('new client is connected',socket.id);
 
+  socket.on('join-session',({sessionId}) => {
+      socket.join(sessionId);
+      console.log(`user ${socket.id} joined session: ${sessionId}`);
+  })
+
   socket.on('disconnect',() => {
     console.log('Client is disconnected!',socket.id);
   })
