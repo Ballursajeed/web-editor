@@ -56,16 +56,21 @@ const Collabe = () => {
 
   },[session])
 
+  console.log("project id:",id,name)
+
   return (
    <div className="app-container">
-    {id.length > 0 && 
-    <Explorer name={name} 
-      projectId={id} 
-      onFileSelect={setSelectedFile} 
-      onFilesSelect={setSelectedFiles}
-      selectedFiles={selectedFiles}
-    />}
-      
+    {id && name ? (   
+      <Explorer 
+        name={name} 
+        projectId={id} 
+        onFileSelect={setSelectedFile} 
+        onFilesSelect={setSelectedFiles}
+        selectedFiles={selectedFiles}
+      />
+    ) : (
+      <p>Loading project...</p>
+    )}
 
       <div className='right-container'>
         <SelectedFiles selectedFiles={selectedFiles} onFilesSelect={setSelectedFiles}  onFileSelect={setSelectedFile} />

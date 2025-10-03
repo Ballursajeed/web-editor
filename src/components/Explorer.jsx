@@ -24,6 +24,8 @@ export default function Explorer({ name, projectId, onFileSelect, onFilesSelect,
   const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
+     if (!projectId) return;
+
     const fetchTree = async () => {
       try {
         const res = await axios.get(`${SERVER}/file/tree/${projectId}`,{
@@ -52,6 +54,9 @@ export default function Explorer({ name, projectId, onFileSelect, onFilesSelect,
   };
 
   const handleFormSubmit = async() => {
+
+     if (!projectId) return;
+    
     const res = await axios.post(`${SERVER}/file/add`,{
       name:formName,projectId,type, parentId:null
     },{
@@ -114,6 +119,7 @@ return (
 
       <TreeView 
         nodes={tree}
+        projectId={projectId}
         onFileSelect={onFileSelect}
         onFilesSelect={onFilesSelect}
         selectedFiles={selectedFiles}
@@ -185,7 +191,7 @@ return (
 );
 }
 
-function TreeView({ nodes, onFileSelect, onFilesSelect, selectedFiles }) {
+function TreeView({ nodes, onFileSelect, onFilesSelect, projectId, selectedFiles }) {
   const [openFolders, setOpenFolders] = useState({});
   const [showMenu, setShowMenu] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
@@ -206,7 +212,6 @@ const extensionToIcon = {
   c: <SiC color="#A8B9CC" />,              
 };
 
-  const { id } = useParams();
 
   const toggleFolder = (id) => {
     setOpenFolders((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -226,7 +231,7 @@ const extensionToIcon = {
 
   const handleFormSubmit = async() => {
     const res = await axios.post(`${SERVER}/file/add`,{
-      name:formName,projectId:id,type, parentId:parentIdState
+      name:formName,projectId,type, parentId:parentIdState
     },{
          withCredentials: true
       });
