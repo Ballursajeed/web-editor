@@ -52,7 +52,15 @@ io.on("connection",(socket) => {
 
   socket.on('join-session',({sessionId}) => {
       socket.join(sessionId);
+      socket.room = sessionId;
       console.log(`user ${socket.id} joined session: ${sessionId}`);
+  });
+
+  socket.on('edits',(res) => {
+    if(socket.room){
+      console.log("edits:",res);
+      io.to(socket.room).emit('client-edit',res);
+    }
   })
 
   socket.on('disconnect',() => {
