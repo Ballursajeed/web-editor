@@ -38,7 +38,7 @@ const Project = () => {
 
       <div className='right-container'>
         <SelectedFiles selectedFiles={selectedFiles} onFilesSelect={setSelectedFiles}  onFileSelect={setSelectedFile} />
-        <File role='editor' fileId={selectedFile} />
+        <File role='editor' socket={null} fileId={selectedFile} />
       </div>
      </div>
   )

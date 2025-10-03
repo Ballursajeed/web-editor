@@ -17,6 +17,8 @@ const Collabe = () => {
   const [role,setRole] = useState('editor')
   const { session } = useParams(); 
 
+  const [socket,setSocket] = useState(null);
+
   useEffect(() => {
       const fetchProject = async() => {
         const res = await axios.get(`${SERVER}/file/project/collabe/${session}`,{
@@ -33,21 +35,23 @@ const Collabe = () => {
 
   useEffect(() => {
 
-    const socket = io(SERVER,{
+    const s = io(SERVER,{
       withCredentials: true
     });
 
-    socket.on('connect',() => {
-        console.log("user is connected: ",socket.id);
-        socket.emit('join-session',{sessionId: session})
+    s.on('connect',() => {
+        console.log("user is connected: ",s.id);
+        s.emit('join-session',{sessionId: session})
     });
 
-    socket.on("disconnect",() => {
-      console.log("client is disconnected!",socket.id);
-    })
+    s.on("disconnect",() => {
+      console.log("client is disconnected!",s.id);
+    });
+
+     setSocket(s);
 
     return () => {
-    socket.disconnect();
+    s.disconnect();
   };
 
   },[session])
@@ -65,7 +69,7 @@ const Collabe = () => {
 
       <div className='right-container'>
         <SelectedFiles selectedFiles={selectedFiles} onFilesSelect={setSelectedFiles}  onFileSelect={setSelectedFile} />
-        <File role={role} fileId={selectedFile} />
+        <File role={role} fileId={selectedFile} socket={socket} />
       </div>
      </div>
   )

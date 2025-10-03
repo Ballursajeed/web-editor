@@ -9,7 +9,7 @@ import { SERVER } from "../constants";
 import SelectedFiles from "./selectedFiles/SelectedFiles";
 
       
-const File = ({ fileId,role }) => {
+const File = ({ fileId,role,socket }) => {
     const [code, setCode] = useState("");
     const [fileName,setFileName] = useState('');
     const [language, setLanguage] = useState("plaintext");
@@ -50,6 +50,19 @@ const File = ({ fileId,role }) => {
   useEffect(() => {
     checkAuth("/login");
   }, []);
+
+  useEffect(() => {
+      if(!socket)  return;
+      socket.on('client-edit',(res) => {
+        if(String(res.fileId) === fileId){
+        setCode(res.code); 
+        }
+      });
+
+      return () => {
+      socket.off("client-edit");
+    };
+  },[socket])
 
   const handleSave = async () => {
     if (!fileId) return;
@@ -120,10 +133,11 @@ const File = ({ fileId,role }) => {
   }
 
   const onChangeHandler = (newValue) => {
-       setCode(newValue)
+       setCode(newValue);
+       socket.emit('edits',{fileId,code:newValue})
   }
 
-  // Ctrl+S listener
+  // Ctrl+S 
   useEffect(() => {
     const handleKey = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "s") {
