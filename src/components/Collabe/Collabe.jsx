@@ -56,8 +56,6 @@ const Collabe = () => {
 
   },[session])
 
-  console.log("project id:",id,name)
-
   return (
    <div className="app-container">
     {id && name ? (   

@@ -106,16 +106,19 @@ const handleUpdate = async (id) => {
 };
 
     useEffect(() => {
+      setLoading(true);
      const fetchProjects = async() => {
       const res = await axios.get(`${SERVER}/file/project/user`,{
         withCredentials: true
       });
       if(res.data.success){
+        setLoading(false);
         setProjects([...projects,...res.data.projects])
       }
      } 
      checkAuth("/login");
      fetchProjects();
+     setLoading(false);  
   }, []);
 
   return (

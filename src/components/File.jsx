@@ -51,18 +51,20 @@ const File = ({ fileId,role,socket }) => {
     checkAuth("/login");
   }, []);
 
-  useEffect(() => {
-      if(!socket)  return;
-      socket.on('client-edit',(res) => {
-        if(String(res.fileId) === fileId){
-        setCode(res.code); 
-        }
-      });
 
-      return () => {
-      socket.off("client-edit");
-    };
-  },[socket])
+  useEffect(() => {
+  if(!socket) return;
+
+  const handler = (res) => {
+    if(String(res.fileId) === fileId && res.sender !== socket.id){
+      setCode(res.code);
+    }
+  }
+
+  socket.on('client-edit', handler);
+  return () => socket.off('client-edit', handler);
+
+}, [socket, fileId]);
 
   const handleSave = async () => {
     if (!fileId) return;
