@@ -59,7 +59,7 @@ io.on("connection",(socket) => {
   socket.on('edits',(res) => {
     if(socket.room){
       console.log("edits:",res);
-      io.to(socket.room).emit('client-edit',res);
+       io.to(socket.room).emit('client-edit', {...res, sender: socket.id});
     }
   })
 
