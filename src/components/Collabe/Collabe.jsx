@@ -18,6 +18,7 @@ const Collabe = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFiles,setSelectedFiles] = useState([]);
 
+
   const [name,setName] = useState('');
   const [id,setId] = useState('');
   const [role,setRole] = useState('editor')
@@ -53,11 +54,6 @@ const Collabe = () => {
         s.emit('join-session',{sessionId: session,user})
     });
 
-    s.on('live-users',(users) => {
-      console.log('live connected users:',users);
-      
-    })
-
     s.on("disconnect",() => {
       console.log("client is disconnected!",s.id);
     });
@@ -68,7 +64,7 @@ const Collabe = () => {
     s.disconnect();
   };
 
-  },[session,user])
+  },[session,user]);
 
   return (
    <div className="app-container">
@@ -76,6 +72,7 @@ const Collabe = () => {
       <Explorer 
         name={name} 
         projectId={id} 
+        socket={socket}
         onFileSelect={setSelectedFile} 
         onFilesSelect={setSelectedFiles}
         selectedFiles={selectedFiles}

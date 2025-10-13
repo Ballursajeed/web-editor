@@ -10,7 +10,13 @@ import { SERVER } from "../constants";
 import { toast } from 'react-toastify';
 
 
-export default function Explorer({ name, projectId, onFileSelect, onFilesSelect, selectedFiles }) {
+export default function Explorer({ name, 
+  projectId, 
+  onFileSelect, 
+  onFilesSelect, 
+  selectedFiles,
+  socket = null
+}) {
   const [tree, setTree] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
@@ -20,6 +26,8 @@ export default function Explorer({ name, projectId, onFileSelect, onFilesSelect,
   const [type,setType] = useState('');
   const [formName,setFormName] = useState('');
   const [sessionUrl,setSessionUrl] = useState('');
+
+  const [liveUsers,setLiveUsers] = useState({});
 
   const user = useSelector((state) => state.auth.user);
 
@@ -38,6 +46,25 @@ export default function Explorer({ name, projectId, onFileSelect, onFilesSelect,
     };
     fetchTree();
   }, [projectId]);
+
+ useEffect(() => {
+  if (!socket) return;
+
+  const handleLiveUsers = (usersObject) => {
+    const usersArray = Object.values(usersObject);
+    setLiveUsers(usersArray);
+    console.log('live connected users:', usersArray);
+  };
+
+  socket.on('live-users', handleLiveUsers);
+
+  return () => {
+    socket.off('live-users', handleLiveUsers);
+  };
+}, [socket]);
+
+console.log("explorer state live users:",liveUsers);
+
 
   const handleCreateButton = (e) => {
     e.stopPropagation();
@@ -155,7 +182,24 @@ return (
     </div>
 
     <div className="live-share">
+
   <button onClick={handleCollabe}>Collabe</button>
+
+   {liveUsers.length > 0 && (
+  <div className="live-users">
+    <h4>Live Users ({liveUsers.length})</h4>
+    <div className="live-users-list">
+      {liveUsers.map((user, index) => (
+        <div className="live-user" key={index}>
+          <div className="avatar">
+            {user ? user.charAt(0).toUpperCase() : "?"}
+          </div>
+          <span className="username">{user || "Unknown"}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
 
   {showCollabe && (
     <div className="share">
