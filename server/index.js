@@ -28,7 +28,6 @@ connectDB();
 
 import fileRouter from "./routes/file.route.js";
 import userRouter from "./routes/user.routes.js"
-import { log } from "console";
 
 app.use("/file",fileRouter);
 app.use("/user",userRouter);
@@ -57,7 +56,7 @@ io.on("connection",(socket) => {
       socket.join(sessionId);
       socket.room = sessionId;
       users[socket.id] = user.username;
-      socket.emit('live-users',users)
+      io.emit('live-users',users)
       console.log(`user ${user.username} joined session: ${sessionId}`);
       console.log("///");
       console.log("live users: ",users);
@@ -73,6 +72,7 @@ io.on("connection",(socket) => {
 
   socket.on('disconnect',() => {
     delete users[socket.id];
+    io.emit('live-users',users);
     console.log('Client is disconnected!',socket.id);
   })
 
