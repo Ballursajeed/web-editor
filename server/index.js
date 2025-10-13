@@ -28,6 +28,7 @@ connectDB();
 
 import fileRouter from "./routes/file.route.js";
 import userRouter from "./routes/user.routes.js"
+import { log } from "console";
 
 app.use("/file",fileRouter);
 app.use("/user",userRouter);
@@ -45,15 +46,22 @@ const io = new Server(httpServer,{
     credentials: true
   }
 });
+const users = {};
 
 io.on("connection",(socket) => {
 
   console.log('new client is connected',socket.id);
 
-  socket.on('join-session',({sessionId}) => {
+  socket.on('join-session',({sessionId,user}) => {
+    
       socket.join(sessionId);
       socket.room = sessionId;
-      console.log(`user ${socket.id} joined session: ${sessionId}`);
+      users[socket.id] = user.username;
+      socket.emit('live-users',users)
+      console.log(`user ${user.username} joined session: ${sessionId}`);
+      console.log("///");
+      console.log("live users: ",users);
+      
   });
 
   socket.on('edits',(res) => {
@@ -64,6 +72,7 @@ io.on("connection",(socket) => {
   })
 
   socket.on('disconnect',() => {
+    delete users[socket.id];
     console.log('Client is disconnected!',socket.id);
   })
 
