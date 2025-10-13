@@ -6,8 +6,14 @@ import axios from 'axios';
 import { SERVER } from '../../constants';
 import SelectedFiles from '../selectedFiles/SelectedFiles';
 import { io } from 'socket.io-client';
+import { useSelector } from 'react-redux';
+import { useCheckAuth } from '../../hooks/useAuthCheck';
 
 const Collabe = () => {
+
+  const user = useSelector((state) => state.auth.user);
+  const checkAuth = useCheckAuth();
+  
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFiles,setSelectedFiles] = useState([]);
@@ -30,19 +36,27 @@ const Collabe = () => {
             setRole(res.data.role);
         }
       }
+      checkAuth('/login');
       fetchProject();
   },[]);
 
   useEffect(() => {
+
+    if (!user || !user._id) return;
 
     const s = io(SERVER,{
       withCredentials: true
     });
 
     s.on('connect',() => {
-        console.log("user is connected: ",s.id);
-        s.emit('join-session',{sessionId: session})
+        console.log("user is connected: ",user);
+        s.emit('join-session',{sessionId: session,user})
     });
+
+    s.on('live-users',(users) => {
+      console.log('live connected users:',users);
+      
+    })
 
     s.on("disconnect",() => {
       console.log("client is disconnected!",s.id);
@@ -54,7 +68,7 @@ const Collabe = () => {
     s.disconnect();
   };
 
-  },[session])
+  },[session,user])
 
   return (
    <div className="app-container">
