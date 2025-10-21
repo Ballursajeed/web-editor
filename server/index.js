@@ -63,6 +63,16 @@ io.on("connection",(socket) => {
       
   });
 
+  socket.on("cursor-move", (data) => {
+  if (socket.room) {
+    io.to(socket.room).emit("client-cursor", {
+      ...data,
+      sender: socket.id,
+      username: users[socket.id],
+    });
+  }
+});
+
   socket.on('edits',(res) => {
     if(socket.room){
       console.log("edits:",res);
