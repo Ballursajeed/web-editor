@@ -30,7 +30,6 @@ const File = ({ fileId, role, socket }) => {
     java: "java",
   };
 
-  // ⬇️ Fetch file
   useEffect(() => {
     if (!fileId) return;
     const fetchFile = async () => {
@@ -51,7 +50,6 @@ const File = ({ fileId, role, socket }) => {
     checkAuth("/login");
   }, []);
 
-  // ⬇️ Handle remote edits
   useEffect(() => {
     if (!socket) return;
 
@@ -65,12 +63,11 @@ const File = ({ fileId, role, socket }) => {
     return () => socket.off("client-edit", handler);
   }, [socket, fileId]);
 
-  // ⬇️ When editor mounts
   const handleEditorMount = (editor, monaco) => {
+    if(!socket) return;
     editorRef.current = editor;
     monacoRef.current = monaco;
 
-    // Track your cursor
     editor.onDidChangeCursorPosition((e) => {
   socket.emit("cursor-move", {
     fileId,
@@ -78,13 +75,11 @@ const File = ({ fileId, role, socket }) => {
   });
 });
 
-    // Track your edits
     editor.onDidChangeModelContent(() => {
       socket.emit("edits", { fileId, code: editor.getValue() });
     });
   };
 
-  // ⬇️ Listen for other users’ cursors
   useEffect(() => {
     if (!socket) return;
 
@@ -105,19 +100,16 @@ const File = ({ fileId, role, socket }) => {
     return () => socket.off("client-cursor", handleCursorUpdate);
   }, [socket, fileId]);
 
-  // ⬇️ Draw all foreign cursors
 useEffect(() => {
   const editor = editorRef.current;
   const monaco = monacoRef.current;
   if (!editor || !monaco) return;
 
-  // Remove previous widgets (if any)
   if (editor._cursorWidgets) {
     editor._cursorWidgets.forEach((id) => editor.removeContentWidget(id));
   }
   editor._cursorWidgets = [];
 
-  // Add one widget per user
   Object.entries(userCursors).forEach(([id, { position, username, color }]) => {
     if (!position) return;
 
@@ -138,7 +130,6 @@ useEffect(() => {
   });
 }, [userCursors]);
 
-  // ⬇️ Save & delete handlers
   const handleSave = async () => {
     if (!fileId) return;
     try {
@@ -172,7 +163,7 @@ useEffect(() => {
     }
   };
 
-  // ⌨️ Ctrl + S
+  // Ctrl + S
   useEffect(() => {
     const handleKey = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "s") {
