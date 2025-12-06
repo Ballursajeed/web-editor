@@ -138,6 +138,7 @@ useEffect(() => {
         { content: code },
         { withCredentials: true }
       );
+
       if (res.data.success) {
         toast.success("File saved successfully!", { autoClose: 1000 });
       }
@@ -186,6 +187,7 @@ useEffect(() => {
         language={language}
         theme="vs-dark"
         value={code}
+        onChange={(value) => setCode(value || "")}
         onMount={handleEditorMount}
         options={{
           readOnly: role === "viewer",
