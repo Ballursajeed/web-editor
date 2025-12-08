@@ -63,9 +63,6 @@ export default function Explorer({ name,
   };
 }, [socket]);
 
-console.log("explorer state live users:",liveUsers);
-
-
   const handleCreateButton = (e) => {
     e.stopPropagation();
     const rect = e.target.getBoundingClientRect();
