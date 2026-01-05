@@ -91,6 +91,7 @@ GitHub Repo: [https://github.com/Ballursajeed/web-editor](https://github.com/Bal
 ---
 
 ## Demo Videos
-Videos showing feature progress are available (LinkedIn posts Day 1–9).  
-- Day 1–5: Core editor, folder structure, multi-file editing  
-- Day 6–9: Real-time collaboration features, cursor tracking, session management
+Videos showing feature progress are available via LinkedIn posts.  
+
+- Initial features: Core editor, folder structure, multi-file editing  
+- Later features: Real-time collaboration, session management, cursor tracking, role-based access
