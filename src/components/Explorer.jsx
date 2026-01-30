@@ -240,6 +240,7 @@ function TreeView({ nodes, onFileSelect, onFilesSelect, projectId, selectedFiles
   const [type,setType] = useState('');
   const [formName,setFormName] = useState('');
   const [parentIdState,setParentIdState] = useState('');
+  const { id } = useParams();
 
 const extensionToIcon = {
   js: <DiJavascript1 color="#f7df1e" />,   
@@ -272,7 +273,7 @@ const extensionToIcon = {
 
   const handleFormSubmit = async() => {
     const res = await axios.post(`${SERVER}/file/add`,{
-      name:formName,projectId,type, parentId:parentIdState
+      name:formName,projectId:id,type, parentId:parentIdState
     },{
          withCredentials: true
       });
