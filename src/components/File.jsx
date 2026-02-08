@@ -88,7 +88,7 @@ const File = ({ fileId, role, socket }) => {
 
       setUserCursors((prev) => ({
         ...prev,
-        [data.username]: {
+        [data.sender]: {
           position: data.position,
           color: data.color || "#ff4d4d",
           username: data.username,
