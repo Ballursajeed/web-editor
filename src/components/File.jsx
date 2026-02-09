@@ -8,14 +8,14 @@ import { useCheckAuth } from "../hooks/useAuthCheck";
 import { SERVER } from "../constants";
 
 const File = ({ fileId, role, socket }) => {
-  const [code, setCode] = useState("");
-  const [fileName, setFileName] = useState("");
   const [language, setLanguage] = useState("plaintext");
   const [userCursors, setUserCursors] = useState({});
+  const [fileContent, setFileContent] = useState("");
+
 
   const editorRef = useRef(null);
   const monacoRef = useRef(null);
-  const decorationIds = useRef([]);
+  const isRemoteChange = useRef(false);
 
   const checkAuth = useCheckAuth();
 
@@ -31,54 +31,48 @@ const File = ({ fileId, role, socket }) => {
   };
 
   useEffect(() => {
-    if (!fileId) return;
-    const fetchFile = async () => {
-      const res = await axios.get(`${SERVER}/file/get/${fileId}`, {
-        withCredentials: true,
-      });
-      const file = res.data.file;
-      setCode(file.content);
-      setFileName(file.name);
-
-      const ext = file.name.split(".").pop();
-      setLanguage(extensionToLang[ext] || "plaintext");
-    };
-    fetchFile();
-  }, [fileId]);
-
-  useEffect(() => {
     checkAuth("/login");
   }, []);
 
   useEffect(() => {
-    if (!socket) return;
+    if (!fileId) return;
 
-    const handler = (res) => {
-      if (String(res.fileId) === fileId && res.sender !== socket.id) {
-        setCode(res.code);
-      }
+    const fetchFile = async () => {
+      const res = await axios.get(`${SERVER}/file/get/${fileId}`, {
+        withCredentials: true,
+      });
+
+      const file = res.data.file;
+
+      const ext = file.name.split(".").pop();
+      setLanguage(extensionToLang[ext] || "plaintext");
+      console.log("FILE from DB: ",file.content)
+
+      setFileContent(file.content);
     };
 
-    socket.on("client-edit", handler);
-    return () => socket.off("client-edit", handler);
+    fetchFile();
+  }, [fileId]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleRemoteEdits = (data) => {
+      if (data.fileId !== fileId) return;
+      if (data.sender === socket.id) return;
+
+      const editor = editorRef.current;
+      if (!editor) return;
+
+      isRemoteChange.current = true;
+      editor.executeEdits("remote", data.changes);
+      isRemoteChange.current = false;
+    };
+
+    socket.on("client-edits", handleRemoteEdits);
+
+    return () => socket.off("client-edits", handleRemoteEdits);
   }, [socket, fileId]);
-
-  const handleEditorMount = (editor, monaco) => {
-    if(!socket) return;
-    editorRef.current = editor;
-    monacoRef.current = monaco;
-
-    editor.onDidChangeCursorPosition((e) => {
-  socket.emit("cursor-move", {
-    fileId,
-    position: e.position,
-  });
-});
-
-    editor.onDidChangeModelContent(() => {
-      socket.emit("edits", { fileId, code: editor.getValue() });
-    });
-  };
 
   useEffect(() => {
     if (!socket) return;
@@ -90,8 +84,8 @@ const File = ({ fileId, role, socket }) => {
         ...prev,
         [data.sender]: {
           position: data.position,
-          color: data.color || "#ff4d4d",
           username: data.username,
+          color: data.color || "#ff4d4d",
         },
       }));
     };
@@ -100,67 +94,102 @@ const File = ({ fileId, role, socket }) => {
     return () => socket.off("client-cursor", handleCursorUpdate);
   }, [socket, fileId]);
 
-useEffect(() => {
-  const editor = editorRef.current;
-  const monaco = monacoRef.current;
-  if (!editor || !monaco) return;
+  const handleEditorMount = (editor, monaco) => {
+    editorRef.current = editor;
+    monacoRef.current = monaco;
 
-  if (editor._cursorWidgets) {
-    editor._cursorWidgets.forEach((id) => editor.removeContentWidget(id));
-  }
-  editor._cursorWidgets = [];
-
-  Object.entries(userCursors).forEach(([id, { position, username, color }]) => {
-    if (!position) return;
-
-    const widgetId = { getId: () => `cursor-widget-${id}` };
-    const domNode = document.createElement("div");
-    domNode.textContent = username;
-    domNode.className = "foreign-label";
-    domNode.style.backgroundColor = color || "#ff4081";
-
-    widgetId.getDomNode = () => domNode;
-    widgetId.getPosition = () => ({
-      position,
-      preference: [monaco.editor.ContentWidgetPositionPreference.ABOVE],
+ 
+    editor.onDidChangeCursorPosition((e) => {
+      socket?.emit("cursor-move", {
+        fileId,
+        position: e.position,
+      });
     });
 
-    editor.addContentWidget(widgetId);
-    editor._cursorWidgets.push(widgetId);
-  });
-}, [userCursors]);
+
+    editor.onDidChangeModelContent((event) => {
+      if (isRemoteChange.current) return;
+
+      socket?.emit("edits", {
+        fileId,
+        changes: event.changes,
+      });
+    });
+  };
+
+  useEffect(() => {
+    const editor = editorRef.current;
+    const monaco = monacoRef.current;
+    if (!editor || !monaco) return;
+
+    if (editor._cursorWidgets) {
+      editor._cursorWidgets.forEach((w) =>
+        editor.removeContentWidget(w)
+      );
+    }
+
+    editor._cursorWidgets = [];
+
+    Object.entries(userCursors).forEach(([id, { position, username, color }]) => {
+      if (!position) return;
+
+      const widget = {
+        getId: () => `cursor-${id}`,
+        getDomNode: () => {
+          const node = document.createElement("div");
+          node.textContent = username;
+          node.className = "foreign-label";
+          node.style.backgroundColor = color;
+          return node;
+        },
+        getPosition: () => ({
+          position,
+          preference: [
+            monaco.editor.ContentWidgetPositionPreference.ABOVE,
+          ],
+        }),
+      };
+
+      editor.addContentWidget(widget);
+      editor._cursorWidgets.push(widget);
+    });
+  }, [userCursors]);
 
   const handleSave = async () => {
-    if (!fileId) return;
+    if (!fileId || !editorRef.current) return;
+
     try {
+      const content = editorRef.current.getValue();
+
       const res = await axios.put(
         `${SERVER}/file/save/${fileId}`,
-        { content: code },
+        { content },
         { withCredentials: true }
       );
 
       if (res.data.success) {
-        toast.success("File saved successfully!", { autoClose: 1000 });
+        toast.success("File saved!", { autoClose: 1000 });
       }
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong!");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Error saving file");
     }
   };
 
   const handleDelete = async () => {
     try {
-      const res = await axios.delete(`${SERVER}/file/delete/${fileId}`, {
-        withCredentials: true,
-      });
+      const res = await axios.delete(
+        `${SERVER}/file/delete/${fileId}`,
+        { withCredentials: true }
+      );
 
       if (res.data.success) {
-        toast.success("File deleted successfully!", {
+        toast.success("File deleted", {
           autoClose: 1000,
           onClose: () => window.location.reload(),
         });
       }
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong!");
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Delete failed");
     }
   };
 
@@ -172,40 +201,45 @@ useEffect(() => {
         handleSave();
       }
     };
+
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [code, fileId]);
+  }, [fileId]);
 
-  if (!fileId) return <div className="no-file">Select a file to edit...</div>;
+  if (!fileId)
+    return <div className="no-file">Select a file...</div>;
 
   return (
     <div className="file-container">
       <Editor
-        key={language}
         height="800px"
         className="file-editor"
         language={language}
         theme="vs-dark"
-        value={code}
-        onChange={(value) => setCode(value || "")}
+        value={fileContent}
         onMount={handleEditorMount}
         options={{
           readOnly: role === "viewer",
           minimap: { enabled: false },
         }}
       />
+
       <div className="buttons">
         <button
           className="save-btn"
           onClick={handleSave}
           disabled={role === "viewer"}
         >
-          save
+          Save
         </button>
-        <button onClick={handleDelete} disabled={role === "viewer"}>
-          delete
+        <button
+          onClick={handleDelete}
+          disabled={role === "viewer"}
+        >
+          Delete
         </button>
       </div>
+
       <ToastContainer />
     </div>
   );

@@ -27,7 +27,7 @@ export default function Explorer({ name,
   const [formName,setFormName] = useState('');
   const [sessionUrl,setSessionUrl] = useState('');
 
-  const [liveUsers,setLiveUsers] = useState({});
+  const [liveUsers,setLiveUsers] = useState([]);
 
   const user = useSelector((state) => state.auth.user);
 
@@ -182,21 +182,18 @@ return (
 
   <button onClick={handleCollabe}>Collabe</button>
 
-   {liveUsers.length > 0 && (
-  <div className="live-users">
-    <h4>Live Users ({liveUsers.length})</h4>
-    <div className="live-users-list">
-      {liveUsers.map((user, index) => (
-        <div className="live-user" key={index}>
-          <div className="avatar">
-            {user ? user.charAt(0).toUpperCase() : "?"}
-          </div>
-          <span className="username">{user || "Unknown"}</span>
-        </div>
-      ))}
+   {liveUsers.map((userObj, index) => {
+  const username = userObj?.username || "Unknown";
+
+  return (
+    <div className="live-user" key={index}>
+      <div className="avatar">
+        {username.charAt(0).toUpperCase()}
+      </div>
+      <span className="username">{username}</span>
     </div>
-  </div>
-)}
+  );
+})}
 
   {showCollabe && (
     <div className="share">
